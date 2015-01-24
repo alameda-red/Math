@@ -4,6 +4,12 @@ namespace Alameda\Component\Math;
 
 use Zebba\Component\Utility\ParameterConverter;
 
+/**
+ * Vector
+ *
+ * @author Sebastian Kuhlmann <zebba@hotmail.de>
+ * @package Alameda\Component\Math
+ */
 class Vector implements VectorInterface
 {
     /** @var float[] */
@@ -301,5 +307,33 @@ class Vector implements VectorInterface
     public function isOrthogonal(VectorInterface $v)
     {
         return (0 === $this->dotProduct($v));
+    }
+
+    /**
+     * @param VectorInterface $b
+     * @return VectorInterface
+     */
+    public function crossProduct(VectorInterface $b)
+    {
+        if (3 !== $this->getSize() || 3 !== $b->getSize()) {
+            throw new \LogicException('The cross product can currently only be calculated in 3-dimensional space.');
+        }
+
+        $a = $this->coordinates;
+        $b = $b->getCoordinates();
+
+        $coordinates = array($a[1] * $b[2] - $a[2] * $b[1], $a[2] * $b[0] - $a[0] * $b[2], $a[0] * $b[1] - $a[1] * $b[0]);
+
+        return new self($coordinates);
+    }
+
+    /**
+     * @param VectorInterface $b
+     * @param VectorInterface $c
+     * @return float
+     */
+    public function tripleProduct(VectorInterface $b, VectorInterface $c)
+    {
+        return $this->dotProduct(($b->crossProduct($c)));
     }
 }

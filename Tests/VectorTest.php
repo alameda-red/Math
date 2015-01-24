@@ -4,6 +4,10 @@ namespace Alameda\Math\Tests;
 
 use Alameda\Component\Math\Vector;
 
+/**
+ * @author Sebastian Kuhlmann <zebba@hotmail.de>
+ * @package Alameda\Component\Math
+ */
 class VectorTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructorArray()
@@ -510,6 +514,76 @@ class VectorTest extends \PHPUnit_Framework_TestCase
             array(array(1, 0), array(0, 1), true),
             array(array(1, 1, 0), array(0, 0, 1), true),
             array(array(1, 2, 3), array(1, 1, 1), false),
+        );
+    }
+
+    /**
+     * @dataProvider crossProductDataProvider
+     *
+     * @param array $a
+     * @param array $b
+     * @param array $result
+     */
+    public function testCrossProduct(array $a, array $b, array $result)
+    {
+        $a = new Vector($a);
+        $b = new Vector($b);
+
+        $this->assertEquals(new Vector($result), $a->crossProduct($b));
+    }
+
+    public function crossProductDataProvider()
+    {
+        return array(
+            array(array(1, 4, 0), array(-2, 5, 3), array(12, -3, 13))
+        );
+    }
+
+    /**
+     * @dataProvider crossProductExceptionDataProvider
+     *
+     * @expectedException \LogicException
+     *
+     * @param array $a
+     * @param array $b
+     */
+    public function testCrossProductException(array $a, array $b)
+    {
+        $a = new Vector($a);
+        $b = new Vector($b);
+
+        $a->crossProduct($b);
+    }
+
+    public function crossProductExceptionDataProvider()
+    {
+        return array(
+            array(array(0, 0), array(1, 1)),
+            array(array(0, 0, 0, 0), array(1, 1, 1, 1)),
+        );
+    }
+
+    /**
+     * @dataProvider tripleProductDataProvider
+     *
+     * @param array $a
+     * @param array $b
+     * @param array $c
+     * @param $result
+     */
+    public function testTripleProduct(array $a, array $b, array $c, $result)
+    {
+        $a = new Vector($a);
+        $b = new Vector($b);
+        $c = new Vector($c);
+
+        $this->assertEquals($result, $a->tripleProduct($b, $c));
+    }
+
+    public function tripleProductDataProvider()
+    {
+        return array(
+            array(array(1, 4, -2), array(-2, 1, -5), array(4, 2, 6), 0)
         );
     }
 }
